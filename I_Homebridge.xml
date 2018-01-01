@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<implementation>
+    <files>L_Homebridge.lua</files>
+    <startup>startup</startup>
+    <actionList>
+    </actionList>
+</implementation>
