@@ -117,6 +117,59 @@ function SendUpdate(lul_device, id, key, value)
       };
     }
 end
+
+-- Actually Setup the watchers
+function setupWatchersForDevice(cat, id, type)
+    local properties = watchTable[cat]
+    for i, table in ipairs(properties) do
+        local device_type = table[1]
+        local property = table[2]
+        local key = table[3]
+        -- Set up variable-watch for device
+        luup.variable_watch("catchWatch",device_type,property,id)
+    end
+end
+
+-- Loop through watch table and find eligible properties
+function findEligibleWatchers(did, dcat, dsub, dtype)
+
+    if (#did == 0 ) then
+        print("skipping "..dtype)
+        return
+    end
+
+    for cat, table in pairs(watchTable) do
+
+        if ( (cat.."" == dcat.."") ) then
+            print("matched cat "..did)
+            setupWatchersForDevice(cat, did)
+        end
+
+        if ( (cat.."" == dcat..">"..dsub) ) then
+            print("matched sub"..did)
+            setupWatchersForDevice(cat, did)
+        end
+    end
+
+end
+
+-- Loop through all devices and run the logic for setting up watchers
+function setupWatcherForAllDevices ()
+
+    for k, v in pairs(luup.devices) do
+        findEligibleWatchers(v["id"], v["category_num"], v["subcategory_num"],v["device_type"])
+    end
+
+    -- for k, v in pairs(luup.devices) do
+        -- print(k.."Device " .. v["id"] .. " Category " .. v["category_num"] .. " Subcategory " .. v["subcategory_num"]  .. " Type "  .. v["device_type"] )
+        -- for k2, v2 in pairs(v) do
+            -- print("Device #" .. k .. ":" .. k2 .. "=" .. tostring(v2))
+        -- end
+    -- end
+
+    return true
+end
+
 function findKeyForServiceAndProperty (service, property)
     for cat, properties in pairs(watchTable) do
         for i, table in ipairs(properties) do
@@ -138,4 +191,15 @@ end
 function catchWatch(lul_device, lul_service, lul_variable, lul_value_old, lul_value_new)
     local key = findKeyForServiceAndProperty(lul_service, lul_variable)
     SendUpdate(MainDevice, lul_device, key, lul_value_new)
+end
+
+-- Setup Watchers
+function startup(lul_device)
+    luup.task("Running Lua Startup", 1, "HomebridgeVera", -1)
+    MainDevice = lul_device
+
+    --
+    -- Wait for 30 seconds after restart then run loopThroughDevices
+    --
+    luup.call_delay("setupWatcherForAllDevices",30)
 end
