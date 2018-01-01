@@ -117,3 +117,25 @@ function SendUpdate(lul_device, id, key, value)
       };
     }
 end
+function findKeyForServiceAndProperty (service, property)
+    for cat, properties in pairs(watchTable) do
+        for i, table in ipairs(properties) do
+            local device_type = table[1]
+            local prop = table[2]
+
+            if ((service == device_type) and (prop == property) ) then
+                local key = table[3]
+                return key
+            end
+        end
+    end
+    return false
+end
+
+--
+-- When a watched variable changes, send the update
+--
+function catchWatch(lul_device, lul_service, lul_variable, lul_value_old, lul_value_new)
+    local key = findKeyForServiceAndProperty(lul_service, lul_variable)
+    SendUpdate(MainDevice, lul_device, key, lul_value_new)
+end
