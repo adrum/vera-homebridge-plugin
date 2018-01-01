@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<scpd xmlns="urn:schemas-upnp-org:service-1-0">
+    <specVersion>
+        <major>1</major>
+        <minor>0</minor>
+    </specVersion>
+    <serviceStateTable>
+        <stateVariable sendEvents="no">
+            <name>HomebridgeIp</name>
+            <dataType>string</dataType>
+            <defaultValue>192.168.1.0</defaultValue>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>HomebridgePort</name>
+            <dataType>string</dataType>
+            <defaultValue>8000</defaultValue>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>Username</name>
+            <dataType>string</dataType>
+            <defaultValue>user</defaultValue>
+        </stateVariable>
+        <stateVariable sendEvents="no">
+            <name>Password</name>
+            <dataType>string</dataType>
+            <defaultValue>secret</defaultValue>
+        </stateVariable>
+    </serviceStateTable>
+    <actionList>
+    </actionList>
+</scpd>
