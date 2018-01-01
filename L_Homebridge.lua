@@ -1,3 +1,5 @@
+local http = require 'socket.http'
+local ltn12 = require 'ltn12'
 --
 -- Table entries { "ServiceID", "VariableName", DeviceNo, SceneNo }
 -- http://wiki.mios.com/index.php/Luup_UPnP_Variables_and_Actions
@@ -85,3 +87,33 @@ watchTable = {
         {"urn:upnp-org:serviceId:TemperatureSetpoint1_Cool", "CurrentSetpoint",'setpoint'}, -- todo: conditaionl send setpoint along if in mode
     }
 }
+function SendUpdate(lul_device, id, key, value)
+
+    -- Fetch Configs
+    local HomebridgeIp = readConfig(lul_device,deviceSID,"HomebridgeIp","192.168.1.0")
+    local HomebridgePort = readConfig(lul_device,deviceSID,"HomebridgePort","8000")
+    local Username = readConfig(lul_device,deviceSID,"Username","user")
+    local Password = readConfig(lul_device,deviceSID,"Password","secret")
+
+    -- Prep JSON
+    local postdata = '{"id": "'..id..'", "property": "'..key..'", "value": "'..value..'"}'
+    local len = string.len(postdata)
+
+    -- Prepare Request
+    local url = "http://"..HomebridgeIp..":"..HomebridgePort.."/update"
+    local authorization = "Basic "..Username..":"..Password
+    header = { }
+    local res, status, headers = socket.http.request
+    {
+      url = url;
+      method = "POST";
+      source = ltn12.source.string(postdata),
+      sink = ltn12.sink.table(bodyparts),
+      headers =
+      {
+        ["Content-Type"] = "application/json";
+        ["content-length"] = len;
+        ["authorization"] = authorization;
+      };
+    }
+end
