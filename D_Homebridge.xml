@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<root xmlns="urn:schemas-upnp-org:device-1-0">
+    <specVersion>
+        <major>1</major>
+        <minor>0</minor>
+    </specVersion>
+    <device>
+     <deviceType>urn:adrum:device:HomebridgeVera:1</deviceType>
+     <friendlyName>Homebridge Vera</friendlyName>
+     <manufacturer>adrum</manufacturer>
+     <manufacturerURL>https://github.com/adrum/vera-homebridge-plugin</manufacturerURL>
+     <modelDescription>HomebridgeVera</modelDescription>
+     <modelName>HomebridgeVera</modelName>
+     <modelNumber>1.0</modelNumber>
+     <serviceList>
+        <service>
+            <serviceType>urn:adrum:service:HomebridgeVera:1</serviceType>
+            <serviceId>urn:adrum:serviceId:HomebridgeVera1</serviceId>
+            <SCPDURL>S_HomebridgeVera.xml</SCPDURL>
+        </service>
+    </serviceList>
+    <implementationList>
+        <implementationFile>I_HomebridgeVera.xml</implementationFile>
+    </implementationList>
+</device>
+</root>
